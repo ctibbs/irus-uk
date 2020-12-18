@@ -1,9 +1,7 @@
 # irus-uk
 Code to extract and plot data from IRUS-UK (Institutional Repository Usage Statistics UK) via its two APIs. Further details on the IRUS-UK APIs is available at: https://irus.jisc.ac.uk/r5/uk/embed/api/
 
-To use the IRUS-UK APIs, you will need a Requestor_ID - contact the [JISC helpdesk](mailto:help@jisc.ac.uk) with 'IRUS API' as the subject to request one.
-
-The scripts have been set up to expect the variables for the path where the plots will be saved (py_local_settings.python_path) and the IRUS-UK Requestor_ID (py_local_settings.IRUS_Requestor_ID) to be imported from a local py_local_settings file. 
+To use the IRUS-UK APIs, you will need a Requestor_ID - contact the [JISC helpdesk](mailto:help@jisc.ac.uk) with 'IRUS API' as the subject to request one. Both scripts have been set up to expect the Requestor_ID variable (py_local_settings.IRUS_Requestor_ID) to be imported from a local py_local_settings file. 
 
 ### Scripts
 irusuk_stats_r5_irus_pr.py - Python script to run the irus_pr IRUS-UK report. This can be used to extract and plot any of the available metric types for any of the item types e.g., to extract the total number of downloads for articles you would set Metric_Type=Total_Item_Requests and Item_Type=Article.
