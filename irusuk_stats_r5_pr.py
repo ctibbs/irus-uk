@@ -3,7 +3,7 @@
 ##Parameters that can be selected by the user: BeginDate, EndDate, Metric_Type, Platform, and Granularity
 ##
 ##Usage: >python irusuk_stats_r5_pr.py BeginDate=2020-01 EndDate=2020-10
-##Metric_Type=Total_Item_requests Platform=8
+##Metric_Type=Total_Item_Requests Platform=8
 ##
 ##
 ##Written by C. Tibbs (Dec 2020)
