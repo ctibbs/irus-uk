@@ -72,10 +72,17 @@ elif r.status_code == HTTPStatus.OK:
     ##Save data
     irus_data = json.loads(r.text)
 
+    ##Print the report headers
+    print('')
+    print('#'*50)
+    print(irus_data['Report_Header']['Report_ID']+' - '+irus_data['Report_Header']['Report_Name'])
+
     ##Loop over all of the different item types   
     for item in irus_data['Report_Items']:
+
+        ##Print platform
+        print(item['Platform'])
         print('')
-        print('#'*50)
         
         ##Loop over the periods of interest
         for period in item['Performance']:
@@ -103,15 +110,15 @@ elif r.status_code == HTTPStatus.OK:
                     ##Collate stats into dictionary
                     download_stats[calendar.month_name[begin_date.month]+' '+str(begin_date.year)] = count
 
-        print('')
-        print('#'*50)
+    print('')
+    print('#'*50)
 
 ##Plot stats
 fig = plt.figure()
 plt.bar(range(len(download_stats)), list(download_stats.values()), align='center')
 plt.xticks(range(len(download_stats)), list(download_stats.keys()), rotation=90, fontsize=6)
 plt.grid(b=True, which='major', axis='y', linestyle='dashed', zorder=0)
-plt.title('All Outputs')
+plt.title(item['Platform']+': All Outputs')
 plt.ylabel(Metric_Type)
 plt.subplots_adjust(bottom=0.20)
 plt.savefig(Metric_Type+'_'+Report+'.pdf')
