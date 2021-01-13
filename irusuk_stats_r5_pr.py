@@ -123,4 +123,3 @@ plt.ylabel(Metric_Type)
 plt.subplots_adjust(bottom=0.20)
 plt.savefig(Metric_Type+'_'+Report+'.pdf')
 
-    
