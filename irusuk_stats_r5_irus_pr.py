@@ -63,8 +63,8 @@ download_stats = {}
 url = 'https://irus.jisc.ac.uk/sushiservice/irus/reports/'+Report
 params = {'requestor_id': Requestor_ID, 'platform': Platform, \
           'begin_date': BeginDate, 'end_date': EndDate, \
-          'granularity': Granularity, 'metric_type': Metric_Type, \
-          'attributes_to_show': Attributes}
+          'irus:item_type': Item_Type, 'attributes_to_show': Attributes, \
+          'granularity': Granularity, 'metric_type': Metric_Type}
 
 ##Call the IRUS-UK API
 r = requests.get(url, params=params)
@@ -78,50 +78,53 @@ elif r.status_code == HTTPStatus.OK:
     ##Save data
     irus_data = json.loads(r.text)
 
+    ##Print the report headers
+    print('')
+    print('#'*50)
+    print(irus_data['Report_Header']['Report_ID']+' - '+irus_data['Report_Header']['Report_Name'])
+
     ##Loop over all of the different item types   
     for item in irus_data['Report_Items']:
 
-        ##Only extract stats for selected item type
-        if item['Irus:Item_Type'] == Item_Type:
-            print('')
-            print('#'*50)
-            print(item['Irus:Item_Type'])
+        ##Print platform and item type
+        print(item['Platform']+' - '+item['Irus:Item_Type'])
+        print('')
 
-            ##Loop over the periods of interest for the selected item type
-            for period in item['Performance']:
+        ##Loop over the periods of interest for the selected item type
+        for period in item['Performance']:
 
-                ##Extract periods
-                begin_date_str = period['Period']['Begin_Date']
-                begin_date = datetime.datetime.strptime(begin_date_str, '%Y-%m-%d')
-                end_date_str = period['Period']['End_Date']
-                end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
+            ##Extract periods
+            begin_date_str = period['Period']['Begin_Date']
+            begin_date = datetime.datetime.strptime(begin_date_str, '%Y-%m-%d')
+            end_date_str = period['Period']['End_Date']
+            end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
 
-                ##Print periods
-                print(begin_date_str+' - '+end_date_str)
+            ##Print periods
+            print(begin_date_str+' - '+end_date_str)
                                 
-                ##Loop over the metric types
-                for metric in period['Instance']:
+            ##Loop over the metric types
+            for metric in period['Instance']:
 
-                    ##Only extract stats for selected metric type
-                    if metric['Metric_Type'] == Metric_Type:
-                        count_str = metric['Count']
-                        count = int(count_str)
+                ##Only extract stats for selected metric type
+                if metric['Metric_Type'] == Metric_Type:
+                    count_str = metric['Count']
+                    count = int(count_str)
 
-                        ##Print stats
-                        print('\t',metric['Metric_Type'],'=', metric['Count'])
+                    ##Print stats
+                    print('\t',metric['Metric_Type'],'=', metric['Count'])
 
-                        ##Collate stats into dictionary
-                        download_stats[calendar.month_name[begin_date.month]+' '+str(begin_date.year)] = count
+                    ##Collate stats into dictionary
+                    download_stats[calendar.month_name[begin_date.month]+' '+str(begin_date.year)] = count
 
-            print('')
-            print('#'*50)
+    print('')
+    print('#'*50)
 
 ##Plot stats
 fig = plt.figure()
 plt.bar(range(len(download_stats)), list(download_stats.values()), align='center')
 plt.xticks(range(len(download_stats)), list(download_stats.keys()), rotation=90, fontsize=6)
 plt.grid(b=True, which='major', axis='y', linestyle='dashed', zorder=0)
-plt.title(Item_Type)
+plt.title(item['Platform']+': '+Item_Type)
 plt.ylabel(Metric_Type)
 plt.subplots_adjust(bottom=0.20)
 plt.savefig(Metric_Type+'_'+Item_Type+'_'+Report+'.pdf')
